@@ -12,10 +12,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float Speed = 5;
 
+    private void Update()
+    {
+        rb.velocity = (transform.right * moveInput * Speed);
+    }
+
     private void OnMove(InputValue value)
     {
         moveInput = value.Get<float>();
-        rb.velocity = (transform.right * moveInput * Speed);
     }
 
     private void OnJump(InputValue value)
