@@ -12,9 +12,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float Speed = 5;
 
-    private void Update()
+    private void FixedUpdate()
     {
-        rb.velocity = (transform.right * moveInput * Speed);
+        rb.velocity = new Vector2(moveInput * Speed, rb.velocity.y);
     }
 
     private void OnMove(InputValue value)

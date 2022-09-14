@@ -1270,7 +1270,6 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       spritesheet_players_103: 711843497
-      alienPink_swim1.png: 0
       alienPink_swim2.png: 0
       spritesheet_players_18: -13913822
       alienGreen_swim1.png: 0
@@ -1284,6 +1283,7 @@ TextureImporter:
       alienYellow_stand.png: 0
       spritesheet_players_93: 1073507261
       spritesheet_players_101: 828908092
+      alienPink_front.png: 0
       alienGreen_hit.png: 0
       spritesheet_players_6: -116625213
       spritesheet_players_13: 1898775484
@@ -1341,17 +1341,17 @@ TextureImporter:
       spritesheet_players_87: 699965137
       alienBeige_climb2.png: 0
       spritesheet_players_49: -52390453
-      alienGreen_climb2.png: 0
       alienYellow_front.png: 0
+      alienGreen_climb2.png: 0
       spritesheet_players_42: 1624207731
       spritesheet_players_45: 389486984
       spritesheet_players_34: -1287568110
       spritesheet_players_51: -1697650374
       spritesheet_players_65: -1808712006
       spritesheet_players_53: 1166734850
-      spritesheet_players_61: 937443600
-      spritesheet_players_11: 1020938531
       alienPink_hit.png: 0
+      spritesheet_players_11: 1020938531
+      spritesheet_players_61: 937443600
       spritesheet_players_19: -53784424
       spritesheet_players_39: -1930495111
       alienGreen_climb1.png: 0
@@ -1416,16 +1416,16 @@ TextureImporter:
       spritesheet_players_31: 1523689860
       spritesheet_players_102: 1256212237
       spritesheet_players_8: 1201310927
+      alienPink_swim1.png: 0
       spritesheet_players_99: -972494125
-      spritesheet_players_10: 971513069
       spritesheet_players_72: -58458022
-      spritesheet_players_73: -678364457
+      spritesheet_players_10: 971513069
       spritesheet_players_20: -1979322111
       alienBeige_hit.png: 0
+      spritesheet_players_73: -678364457
       spritesheet_players_54: 1859004682
       alienYellow_hit.png: 0
       alienBeige_swim1.png: 0
-      alienPink_front.png: 0
       spritesheet_players_52: 1868266579
       alienBeige_walk2.png: 0
       spritesheet_players_100: 80735965
