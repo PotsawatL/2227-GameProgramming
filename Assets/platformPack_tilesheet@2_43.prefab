@@ -99,7 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df0cb8b137be2c34e9a5e63eab3295c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 2
+  soCollectible: {fileID: 11400000, guid: 3f324193e6eb2914884301874a2a53ea, type: 2}
+  color: 0
+  powerUp: 0
 --- !u!61 &586765369875314440
 BoxCollider2D:
   m_ObjectHideFlags: 0
