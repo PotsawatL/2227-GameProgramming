@@ -10,30 +10,24 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private PlayerAnimatorController animatorController;
+    [SerializeField] private BoxCollider2D playerBoxCollider;
     [SerializeField] private CollectibleType playerColor;
-    [SerializeField] private PowerUp powerUp;
 
     [Header("Player Values")]
     [SerializeField] private float Speed = 3f;
     [SerializeField] private float jumpForce = 10f;
+    private float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
 
+    [Header("Grounded Check")]
     [SerializeField] private LayerMask groundLayers;
     [SerializeField] private float groundCheckDistance = 0.01f;
-
-    [SerializeField] private float coyoteTime = 0.2f;
-    [SerializeField] private float coyoteTimeCounter;
-    [SerializeField] private bool doubleJumpUsed;
-
+    
     private float _moveInput;
     private bool _isGrounded;
 
     private Collider2D _playerCollider;
     private GameManager _gameManager;
-
-    private void Awake()
-    {
-        doubleJumpUsed = true;
-    }
 
     private void Start()
     {
@@ -43,7 +37,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        CheckGround();
+        //CheckGround();
         SetAnimatorParameters();
     }
 
@@ -63,6 +57,14 @@ public class Player : MonoBehaviour
     private void Move()
     {
         rb.velocity = new Vector2(_moveInput * Speed, rb.velocity.y);
+        if (CheckGround())
+        {
+            coyoteTimeCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+        }
     }
 
     private void Jump(float force)
@@ -71,12 +73,11 @@ public class Player : MonoBehaviour
         rb.AddForce(force * transform.up, ForceMode2D.Impulse);
     }
 
-    private void TryJumping()
+    /*private void TryJumping()
     {
         if (!_isGrounded) return;
-
         Jump(jumpForce);
-    }
+    }*/
 
     private void FlipPlayerSprite()
     {
@@ -90,43 +91,23 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void CheckGround()
+    private bool CheckGround()
     {
         var playerBounds = _playerCollider.bounds;
 
-        RaycastHit2D raycastHit = Physics2D.BoxCast(playerBounds.center, playerBounds.size, 0f, Vector2.down, groundCheckDistance, groundLayers);
+        var raycastHit2D = Physics2D.BoxCast(playerBounds.center, playerBounds.size, 0f, Vector2.down, groundCheckDistance, groundLayers);
 
-        _isGrounded = raycastHit.collider != null;
-
-        if (raycastHit.collider != null)
-        {
-            _isGrounded = true;
-        }
-        else
-        {
-            _isGrounded = false;
-        }
-
-        if (_isGrounded is true)
-        {
-            coyoteTimeCounter = coyoteTime;
-        }
-        else
-        {
-            coyoteTimeCounter -= Time.deltaTime;
-        }
-        //Debug.Log(_isGrounded);
+        return _isGrounded = raycastHit2D.collider != null;
     }
 
     private void SetAnimatorParameters()
     {
-        animatorController.setAnimetorParameter(rb.velocity.normalized, _isGrounded);
+        animatorController.setAnimetorParameter(rb.velocity, _isGrounded);
     }
 
     private void OnMove(InputValue value)
     {
         _moveInput = value.Get<float>();
-
         FlipPlayerSprite();
     }
 
@@ -134,14 +115,10 @@ public class Player : MonoBehaviour
     {
         if (value.isPressed && coyoteTimeCounter > 0)
         {
+            rb.AddForce((jumpForce * transform.up), ForceMode2D.Impulse);
             coyoteTimeCounter = 0;
         }
-        else if (value.isPressed && !doubleJumpUsed)
-        {
-            doubleJumpUsed = true;
-        }
-
-        TryJumping();
+        //TryJumping();
     }
 
     IEnumerator Respawn (Collider2D collision, int time)
@@ -167,13 +144,6 @@ public class Player : MonoBehaviour
                     break;
                 case CollectibleType.Blue:
                     spriteRenderer.color = Color.blue;
-                    break;
-            }
-
-            switch (powerUp)
-            {
-                case PowerUp.DoubleJump:
-                    doubleJumpUsed = false;
                     break;
             }
 

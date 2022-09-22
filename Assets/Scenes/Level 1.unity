@@ -818,9 +818,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dae0427b1539a014e879f930c1e67c50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpPadColldier: {fileID: 0}
+  jumpPadColldier: {fileID: 463492509}
   animator: {fileID: 463492507}
-  jumpPadForce: 6
+  jumpPadForce: 10
 --- !u!61 &463492509
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -834,7 +834,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.0063319206, y: -0.23428464}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -845,7 +845,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.86069584, y: 0.5314307}
   m_EdgeRadius: 0
 --- !u!1 &475187865
 GameObject:
@@ -5330,6 +5330,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: player
       objectReference: {fileID: 0}
+    - target: {fileID: 7905293021696374051, guid: 1b6f7e93b2754dd43a70d2b3f4e99036, type: 3}
+      propertyPath: m_Size.x
+      value: 0.53523076
+      objectReference: {fileID: 0}
+    - target: {fileID: 7905293021696374051, guid: 1b6f7e93b2754dd43a70d2b3f4e99036, type: 3}
+      propertyPath: m_Size.y
+      value: 1.0484589
+      objectReference: {fileID: 0}
+    - target: {fileID: 7905293021696374051, guid: 1b6f7e93b2754dd43a70d2b3f4e99036, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.009550035
+      objectReference: {fileID: 0}
+    - target: {fileID: 7905293021696374051, guid: 1b6f7e93b2754dd43a70d2b3f4e99036, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.47577053
+      objectReference: {fileID: 0}
     - target: {fileID: 7905293021696374053, guid: 1b6f7e93b2754dd43a70d2b3f4e99036, type: 3}
       propertyPath: boxCollider2D
       value: 
@@ -5338,6 +5354,10 @@ PrefabInstance:
       propertyPath: doubleJumpUsed
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7905293021696374053, guid: 1b6f7e93b2754dd43a70d2b3f4e99036, type: 3}
+      propertyPath: playerBoxCollider
+      value: 
+      objectReference: {fileID: 2137745872}
     - target: {fileID: 7905293021696374053, guid: 1b6f7e93b2754dd43a70d2b3f4e99036, type: 3}
       propertyPath: groundLayers.m_Bits
       value: 64

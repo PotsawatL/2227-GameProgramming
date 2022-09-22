@@ -9,7 +9,7 @@ public class PlayerAnimatorController : MonoBehaviour
     public void setAnimetorParameter(Vector2 playerVelocity, bool groundState)
     {
         animator.SetFloat("xVelocity", Mathf.Abs(playerVelocity.x));
-        animator.SetBool("isGrounded", groundState);
+        animator.SetBool("IsGrounded", groundState);
         
     }
 }
