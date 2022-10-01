@@ -2,26 +2,22 @@ using UnityEngine;
 
 public class FinishLine : MonoBehaviour
 {
-    private GameManager _gameManager;
+    private const string PlayerTag = "Player";
 
+    private GameManager _gameManager;
+    
+    // Why are we checking if the player reaches the finish line here? So, we do not
+    // have to check for every time the player collides with something for a finish line.
+    
     private void Start()
     {
-        FindGameManager();
+        _gameManager = FindObjectOfType<GameManager>();
     }
-
-    private void FindGameManager()
+    
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        if (_gameManager != null) return;
-        
-        _gameManager = FindObjectOfType<GameManager>(); 
-    }
+        if (!col.CompareTag(PlayerTag)) return;
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!collision.CompareTag("Player")) return;
-
-
-        FindGameManager();
-        _gameManager.TriggerNextScene();
+        _gameManager.LoadNextLevel();
     }
 }

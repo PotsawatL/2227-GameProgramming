@@ -1,20 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class JumpPad : MonoBehaviour
 {
-    [SerializeField] private BoxCollider2D jumpPadColldier;
     [SerializeField] private Animator animator;
-    [SerializeField] private float jumpPadForce = 5f;
+    [SerializeField] private float jumpPadForce = 13f;
+    [SerializeField] private float additionalSleepJumpTime = 0.3f;
+    
+    private static readonly int Bounce = Animator.StringToHash("Bounce");
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public float GetJumpPadForce() => jumpPadForce;
+    public float GetAdditionalSleepJumpTime() => additionalSleepJumpTime;
+    
+    public void TriggerJumpPad()
     {
-        if (collision.gameObject.TryGetComponent(out Player player))
-        {
-            animator.SetTrigger("Bounce");
-            player.rb.AddForce(jumpPadForce * transform.up, ForceMode2D.Impulse);
-        }
-
+        animator.SetTrigger(Bounce);
     }
 }

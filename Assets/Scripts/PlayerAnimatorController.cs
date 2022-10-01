@@ -1,15 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimatorController : MonoBehaviour
 {
     [SerializeField] private Animator animator;
+    
+    private static readonly int IsGrounded = Animator.StringToHash("isGrounded");
+    private static readonly int XVelocity = Animator.StringToHash("xVelocity");
+    private static readonly int YVelocity = Animator.StringToHash("yVelocity");
 
-    public void setAnimetorParameter(Vector2 playerVelocity, bool groundState)
+    public void SetAnimatorParameters(Vector2 playerVelocity, bool groundState)
     {
-        animator.SetFloat("xVelocity", Mathf.Abs(playerVelocity.x));
-        animator.SetBool("IsGrounded", groundState);
-        
+        animator.SetBool(IsGrounded, groundState);
+        animator.SetFloat(XVelocity, Mathf.Abs(playerVelocity.x));
+        animator.SetFloat(YVelocity, playerVelocity.y);
     }
 }
