@@ -1,7 +1,10 @@
+using System.Collections;
 using UnityEngine;
 
 public class FinishLine : MonoBehaviour
 {
+    [SerializeField] private AudioController playerAudioController;
+
     private const string PlayerTag = "Player";
 
     private GameManager _gameManager;
@@ -17,7 +20,8 @@ public class FinishLine : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (!col.CompareTag(PlayerTag)) return;
-
+        playerAudioController.PlayWinSound();
         _gameManager.LoadNextLevel();
     }
+
 }

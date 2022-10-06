@@ -11,4 +11,5 @@ public class PlayerAnimatorEvents : MonoBehaviour
     {
         playerAudioController.PlayWalkSound();
     }
+
 }

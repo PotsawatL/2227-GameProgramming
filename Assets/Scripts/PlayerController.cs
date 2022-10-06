@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
         _coyoteTimeTimer = Mathf.Min(_coyoteTimeTimer, coyoteTimeDuration) + Time.deltaTime;
 
         if (_coyoteTimeTimer <= coyoteTimeDuration) return; // If the coyote time timer does not hit the threshold yet, the player can still jump.
-
+        
         _canJump = false; // If the coyote time timer goes beyond the threshold, the player can no longer jump.
     }
 
