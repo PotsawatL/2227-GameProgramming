@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Collectibles", fileName = "New Collectible")]
-public class SOCollectibles : ScriptableObject
+public class SoCollectibles : ScriptableObject
 {
     [SerializeField] private CollectibleType collectibleType;
     [SerializeField] private Sprite sprite;
@@ -12,4 +12,6 @@ public class SOCollectibles : ScriptableObject
     public CollectibleType GetCollectibleType() => collectibleType;
     public Sprite GetOutlineSprite() => outlineSprite;
     public bool GetRespawnable() => respawnable;
+    
+    // Test
 }

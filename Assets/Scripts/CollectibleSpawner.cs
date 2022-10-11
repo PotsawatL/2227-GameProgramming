@@ -6,17 +6,26 @@ public class CollectibleSpawner : MonoBehaviour
     // This script is to handle the respawning of the collectible as a disabled gameObject cannot run any methods or coroutines on its own.
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject collectibleGameObject;
-    [SerializeField] private AudioController playerAudioController;
+    [SerializeField] private AudioPlayer audioPlayer;
+    [SerializeField] private SoAudioClips collectAudioClips;
+    [SerializeField] private SoAudioClips respawnAudioClips;
+    [SerializeField] private ParticleSystem respawnEffect;
 
     [Header("Collectible Settings")]
     [SerializeField] private float respawnTime = 4f;
 
+    private void Start()
+    {
+        spriteRenderer.enabled = false;
+    }
+    
     private IEnumerator RespawnCollectible()
     {
         yield return new WaitForSeconds(respawnTime);
+        respawnEffect.Play();
         SetOutlineSpriteActive(false);
+        PlayRespawn();
         collectibleGameObject.SetActive(true);
-        playerAudioController.PlayRespawnedSound();
     }
 
     private void SetOutlineSpriteActive(bool state)
@@ -32,6 +41,19 @@ public class CollectibleSpawner : MonoBehaviour
     public void StartRespawningCountdown() // This method is to let other script trigger the respawn countdown, and let this script handle the coroutine.
     {
         SetOutlineSpriteActive(true);
+        PlayCollected();
         StartCoroutine(RespawnCollectible());
     }
+    
+    #region Audio
+    private void PlayRespawn()
+    {
+        audioPlayer.PlaySound(respawnAudioClips);
+    }
+
+    private void PlayCollected()
+    {
+        audioPlayer.PlaySound(collectAudioClips);
+    }
+    #endregion
 }

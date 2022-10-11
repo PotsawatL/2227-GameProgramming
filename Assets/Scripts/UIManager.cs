@@ -1,14 +1,20 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    public void LoadScene(int buildIndex)
+    [SerializeField] private TextMeshProUGUI livesText;
+    [SerializeField] private Image[] heartImages;
+    [SerializeField] private Sprite emptyHeartSprite;
+
+    public void UpdateLives(int lives)
     {
-        SceneManager.LoadScene(buildIndex);
-    }
-    public void QuitGame()
-    {
-        Application.Quit();
+        livesText.text = $"Lives: {lives}";
+
+        for (var i = heartImages.Length - 1; i >= lives; i--)
+        {
+            heartImages[i].sprite = emptyHeartSprite;
+        }
     }
 }

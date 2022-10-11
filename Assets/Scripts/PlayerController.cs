@@ -1,33 +1,41 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Component References")]
+    [Header("Component References")] 
     [SerializeField] private Transform player;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Collider2D playerCollider;
     [SerializeField] private PlayerAnimatorController animatorController;
-    [SerializeField] private AudioController playerAudioController;
+    [SerializeField] private PlayerAudioController audioController;
 
-    [Header("Player Values")]
+    [Header("Player Values")] 
     [SerializeField] private float movementSpeed = 3f;
     [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float doubleJumpForceMultiplier = 1.5f;
     [SerializeField] private float timeBetweenJumps = 0.1f;
     [SerializeField] private float coyoteTimeDuration = 0.5f;
 
-    [Header("Ground Checks")]
+    [Header("Ground Checks")] 
     [SerializeField] private LayerMask groundLayers;
     [SerializeField] private float extraGroundCheckDistance = 0.5f;
+    
+    [Header("Particle System")]
+    [SerializeField] private GameObject moveEffect;
+    [SerializeField] private ParticleSystem fallEffect;
 
+    // Pre-made variables
+    private float _doubleJumpForce;
+    
     // Input Values
     private float _moveInput;
-
+    
     // Boolean flags. Booleans for checking conditions.
     private bool _isGrounded;
     private bool _canJump;
     private bool _canDoubleJump;
+    private bool _hasLanded = true;
 
     // Private variables
     private float _coyoteTimeTimer;
@@ -38,18 +46,26 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        _gameManager = FindObjectOfType<GameManager>();
+        _doubleJumpForce = jumpForce * doubleJumpForceMultiplier; // Set up double jump multiplier at the start so you don't multiply every time.
     }
+
     private void Update()
+    {
+        SetAnimatorParameters();
+    }
+    
+    private void FixedUpdate()
     {
         CheckGround();
         CheckCanJump();
-        SetAnimatorParameters();
+        Move();
     }
 
-    private void FixedUpdate()
+    private void FindGameManager()
     {
-        Move();
+        if (_gameManager != null) return;
+        
+        _gameManager = FindObjectOfType<GameManager>();
     }
 
     #region Actions
@@ -57,6 +73,15 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         rb.velocity = new Vector2(_moveInput * movementSpeed, rb.velocity.y);
+        
+        if (_moveInput != 0) 
+        {
+            moveEffect.SetActive(true); 
+        }
+        else
+        { 
+            moveEffect.SetActive(false); 
+        }
     }
 
     private void FlipPlayerSprite()
@@ -68,19 +93,22 @@ public class PlayerController : MonoBehaviour
             _ => player.localScale
         };
     }
-
+    
     private void TryJumping()
     {
         if (_lastJumpTimer <= timeBetweenJumps) return; // If the player just jumped or use a jump pad, ignore the first timeBetweenJumps seconds.
 
+        var currentJumpForce = jumpForce;
+        
         if (!_canJump) // If the player can't jump, check these conditions. Else jump.
         {
             if (!_canDoubleJump) return; // If the player cannot double jump, return void. (Stop here)
             _canDoubleJump = false; // Else set double jump to false, then jump.
+            currentJumpForce = _doubleJumpForce; // Set a double jump force for double jump.
         }
 
-        Jump(jumpForce);
-        playerAudioController.PlayJumpSound();
+        audioController.PlayJump();
+        Jump(currentJumpForce);
     }
 
     public void Jump(float force, float additionalTimeWait = 0f)
@@ -89,22 +117,29 @@ public class PlayerController : MonoBehaviour
         _lastJumpTimer = 0f - additionalTimeWait;
         rb.velocity = new Vector2(rb.velocity.x, 0f); // Reset the y-force to prevent player stacking up jump momentum.
         rb.AddForce(force * transform.up, ForceMode2D.Impulse);
-
     }
 
     private void CheckGround()
     {
         var playerColliderBounds = playerCollider.bounds;
-
+        
         var raycastHit = Physics2D.BoxCast(
-            playerColliderBounds.center,
-            playerColliderBounds.size,
+            playerColliderBounds.center, 
+            playerColliderBounds.size, 
             0f,
-            Vector2.down,
-            extraGroundCheckDistance,
+            Vector2.down, 
+            extraGroundCheckDistance, 
             groundLayers);
 
         _isGrounded = raycastHit.collider != null;
+
+        if (!_hasLanded && _isGrounded)
+        {
+            audioController.PlayFallImpact();
+            fallEffect.Play();
+        }
+        
+        _hasLanded = _isGrounded;
     }
 
     private void CheckCanJump()
@@ -121,7 +156,8 @@ public class PlayerController : MonoBehaviour
         _coyoteTimeTimer = Mathf.Min(_coyoteTimeTimer, coyoteTimeDuration) + Time.deltaTime;
 
         if (_coyoteTimeTimer <= coyoteTimeDuration) return; // If the coyote time timer does not hit the threshold yet, the player can still jump.
-        
+
+        moveEffect.SetActive(false);
         _canJump = false; // If the coyote time timer goes beyond the threshold, the player can no longer jump.
     }
 
@@ -134,21 +170,22 @@ public class PlayerController : MonoBehaviour
     {
         _canDoubleJump = true;
     }
-
+    
     public void TakeDamage()
     {
-        _gameManager = FindObjectOfType<GameManager>();
-        _gameManager.DamagePlayer();
+        FindGameManager();
+        audioController.PlayDeath();
+        _gameManager.ProcessPlayerDeath();
     }
-
+    
     #endregion
-
+    
     #region Input
-
+    
     private void OnMove(InputValue value)
     {
         _moveInput = value.Get<float>();
-
+        
         FlipPlayerSprite();
     }
 
@@ -161,10 +198,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnQuit(InputValue value)
     {
-        _gameManager = FindObjectOfType<GameManager>();
-        _gameManager.LoadMainMenu();
+        FindGameManager();
+        _gameManager.ReturnToMainMenu();
     }
-
+    
     #endregion
 
 }

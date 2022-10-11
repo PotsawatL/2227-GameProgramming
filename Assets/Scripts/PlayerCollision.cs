@@ -4,25 +4,30 @@ using UnityEngine;
 public class PlayerCollision : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
-    [SerializeField] private AudioController playerAudioController;
+    [SerializeField] private PlayerAudioController audioController;
+    [SerializeField] private SpriteRenderer spritePlayer;
+    [SerializeField] private ParticleSystem deathEffect;
 
     private Collider2D _playerCollider;
-    private void Start()
+    [SerializeField]private void Start()
     {
         _playerCollider = GetComponent<Collider2D>();
+    }
+
+    public void Bounce(float jumpPadForce, float jumpTimeSleep)
+    {
+        playerController.Jump(jumpPadForce, jumpTimeSleep);
+    }
+
+    public void MuteFallImpactSounds()
+    {
+        audioController.MuteAudioSource();
     }
     
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.TryGetComponent(out JumpPad jumpPad))
+        if (col.TryGetComponent(out Collectibles collectible))
         {
-            playerAudioController.PlaySprungSound();
-            playerController.Jump(jumpPad.GetJumpPadForce(), jumpPad.GetAdditionalSleepJumpTime());
-            jumpPad.TriggerJumpPad();
-        }
-        else if (col.TryGetComponent(out Collectibles collectible))
-        {
-            playerAudioController.PlayCollectedSound();
             var collectibleType = collectible.GetCollectibleInfoOnContact();
 
             switch (collectibleType)
@@ -40,16 +45,20 @@ public class PlayerCollision : MonoBehaviour
             Debug.Log(collectibleType);
         }
 
-        if (_playerCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
-        {
-            playerAudioController.PlayFallSound();
-        }        
-
         if (_playerCollider.IsTouchingLayers(LayerMask.GetMask("Hazard")))
         {
-            playerAudioController.PlayHitSound();
+            deathEffect.Play();
+            Destroy(spritePlayer);
             playerController.TakeDamage();
+            //StartCoroutine(Break());
         }
+
+        /*IEnumerator Break()
+        {
+        
+            yield return new WaitForSeconds(particleDeathEffect.main.startLifetime.constantMax);
+            Destroy(gameObject);
+        }*/
 
         #region Unused
 
